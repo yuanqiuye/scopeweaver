@@ -1,6 +1,6 @@
 # Contributing to ScopeWeaver
 
-[한국어](CONTRIBUTING.ko.md)
+[한국어](CONTRIBUTING.ko.md) · [繁體中文](CONTRIBUTING.zh-TW.md)
 
 Contributions are welcome: bug fixes, upstream ARTEX backports, dependency upgrades, documentation,
 and tests.

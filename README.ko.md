@@ -4,7 +4,7 @@
 
 LLM 멀티 에이전트 기반 자율 침투 테스트 시스템 (Go 백엔드 + Next.js 프런트엔드)
 
-[English](README.md) · 한국어
+[English](README.md) · 한국어 · [繁體中文](README.zh-TW.md)
 
 </div>
 

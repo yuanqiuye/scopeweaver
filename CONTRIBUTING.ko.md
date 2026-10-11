@@ -1,6 +1,6 @@
 # ScopeWeaver 기여 안내
 
-[English](CONTRIBUTING.md)
+[English](CONTRIBUTING.md) · [繁體中文](CONTRIBUTING.zh-TW.md)
 
 버그 수정, ARTEX 원본 백포트, 의존성 업그레이드, 문서, 테스트 등 모든 기여를 환영합니다.
 
