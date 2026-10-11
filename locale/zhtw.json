@@ -1859,5 +1859,12 @@
 "🔴 Critical": "🔴 嚴重",
 "🔵 Low": "🔵 低",
 "🟠 High": "🟠 高",
-"🟡 Medium": "🟡 中"
+"🟡 Medium": "🟡 中",
+"fk_violation(23503,parent exploration missing)": "fk_violation(23503,父層探索缺失)",
+"[offset=%d read=%d total=%d]\n": "[offset=%d 已讀=%d 總計=%d]\n",
+"advisory unlock: %w": "諮詢鎖解除失敗: %w",
+"advisory lock: %w": "諮詢鎖定失敗: %w",
+"HTTP/SSE URL": "HTTP/SSE URL",
+"%w: %v": "%w: %v",
+"db: ": "資料庫: "
 }
