@@ -194,6 +194,8 @@ package_binary() {
   cp -R skills "$package_root/"
   cp config.example.json "$package_root/"
   cp README.md README.ko.md LICENSE THIRD_PARTY_NOTICES.txt CHANGELOG.md "$package_root/"
+  # This build ships Traditional Chinese as the default, so include its README too.
+  [ -f README.zh-TW.md ] && cp README.zh-TW.md "$package_root/"
   if [ -d docs ]; then cp -R docs "$package_root/"; fi
   # Ship the adapter sources without local dependencies, credentials or runtime state.
   mkdir -p "$package_root/adapters/agent"
