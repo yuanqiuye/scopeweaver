@@ -2,7 +2,7 @@
 // and the node tests. Keep this module free of DOM access and path aliases so
 // `node --test` can import it directly.
 
-export const LOCALES = ["en", "ko"] as const;
+export const LOCALES = ["en", "ko", "zh-TW"] as const;
 export type Locale = (typeof LOCALES)[number];
 
 export const DEFAULT_LOCALE: Locale = "en";
@@ -20,23 +20,36 @@ export const LOCALE_QUERY_PARAM = "lang";
 export const LOCALE_NATIVE_NAMES: Record<Locale, string> = {
   en: "English",
   ko: "한국어",
+  "zh-TW": "繁體中文",
 };
 
 const INTL_LOCALES: Record<Locale, string> = {
   en: "en-US",
   ko: "ko-KR",
+  "zh-TW": "zh-TW",
 };
 
 export function isLocale(value: unknown): value is Locale {
   return typeof value === "string" && (LOCALES as readonly string[]).includes(value);
 }
 
-// normalizeLocale accepts stored values and BCP-47 tags ("ko-KR", "en_US")
-// and maps them onto a supported locale; anything else yields null.
+// normalizeLocale accepts stored values and BCP-47 tags ("ko-KR", "en_US",
+// "zh-TW", "zh-Hant") and maps them onto a supported locale; anything else
+// yields null. Chinese is resolved by script/region rather than by the bare
+// primary subtag: Traditional variants (zh-TW, zh-Hant, zh-HK, zh-MO) map to
+// "zh-TW", while Simplified or unmarked Chinese (zh-CN, zh-Hans, bare zh) does
+// not, so a Simplified preference never silently selects Traditional.
 export function normalizeLocale(value: unknown): Locale | null {
   if (typeof value !== "string") return null;
-  const base = value.trim().toLowerCase().split(/[-_]/)[0];
-  return isLocale(base) ? base : null;
+  const v = value.trim().toLowerCase().replace(/_/g, "-");
+  if (v === "zh" || v.startsWith("zh-")) {
+    if (v === "zh-tw" || v === "zh-hk" || v === "zh-mo" || v === "zh-hant" || v.startsWith("zh-hant-")) {
+      return "zh-TW";
+    }
+    return null;
+  }
+  const base = v.split("-")[0];
+  return isLocale(base) ? (base as Locale) : null;
 }
 
 export function intlLocale(locale: Locale): string {
@@ -51,8 +64,11 @@ export function readCookieLocale(cookie: string): Locale | null {
   for (const part of cookie.split(";")) {
     const [name, ...rest] = part.trim().split("=");
     if (name === LOCALE_COOKIE) {
-      try { return normalizeLocale(decodeURIComponent(rest.join("="))); }
-      catch { return null; }
+      try {
+        return normalizeLocale(decodeURIComponent(rest.join("=")));
+      } catch {
+        return null;
+      }
     }
   }
   return null;

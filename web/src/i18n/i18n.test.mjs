@@ -48,6 +48,12 @@ test("both catalogs are complete and preserve interpolation fields", () => {
     assert.doesNotMatch(catalogs.en[key], /Untranslated|미번역|\p{Script=Han}/u,key);
     assert.doesNotMatch(catalogs.ko[key], /Untranslated|미번역|\p{Script=Han}/u,key);
   }
+  // zh-TW shares the key set and interpolation fields; its values are Han by design.
+  assert.deepEqual(Object.keys(catalogs["zh-TW"]).sort(), Object.keys(catalogs.en).sort());
+  for(const key of Object.keys(catalogs.en)) {
+    assert.ok(catalogs["zh-TW"][key].length,key);
+    assert.deepEqual(placeholders(catalogs.en[key]), placeholders(catalogs["zh-TW"][key]),key);
+  }
   assert.equal(interpolate("Task {id}: {name}",{id:7,name:"사용자 原文 {unchanged}"}),"Task 7: 사용자 原文 {unchanged}");
   assert.equal(interpolate("{missing}",{}),"{missing}");
 });
@@ -119,9 +125,12 @@ test("authored UI contains no untranslated Han literals; legacy parsers are expl
   const failures=[];
   for(const file of sourceFiles()) {
     const rel=path.relative(SRC_ROOT,file);
+    const posix=rel.replaceAll("\\","/");
     if(rel.endsWith(".test.mjs"))continue; // Tests intentionally preserve multilingual user input.
+    if(posix.startsWith("i18n/messages/zhtw/"))continue; // zh-TW locale catalog: Han by design.
     for(const hit of scanFile(file)) {
       if(isLegacyHanLiteral(rel,hit.text))continue;
+      if(posix==="i18n/config.ts" && hit.text==="繁體中文")continue; // zh-TW native name in the selector.
       failures.push(`${rel}:${hit.line} ${hit.text}`);
     }
   }
