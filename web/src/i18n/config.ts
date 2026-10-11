@@ -5,7 +5,10 @@
 export const LOCALES = ["en", "ko", "zh-TW"] as const;
 export type Locale = (typeof LOCALES)[number];
 
-export const DEFAULT_LOCALE: Locale = "en";
+// This build targets a Traditional Chinese (Taiwan) audience, so zh-TW is the
+// out-of-the-box UI language. English and Korean remain fully supported and are
+// selected automatically from a stored preference, cookie, or Accept-Language.
+export const DEFAULT_LOCALE: Locale = "zh-TW";
 
 // Persistence contract shared with the backend (see status notes):
 // localStorage for the UI, a cookie so the server can negotiate too.

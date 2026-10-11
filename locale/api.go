@@ -1,7 +1,7 @@
 package locale
 
 func init() {
-	Register("language must be en or ko", "language must be en or ko", "언어는 en 또는 ko여야 합니다")
+	Register("language must be en, ko, or zh-TW", "language must be en, ko, or zh-TW", "언어는 en, ko 또는 zh-TW여야 합니다")
 	Register("task not found", "task not found", "작업을 찾을 수 없습니다")
 	Register("no active task", "no active task", "활성 작업이 없습니다")
 }

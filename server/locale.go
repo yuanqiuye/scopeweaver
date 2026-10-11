@@ -13,7 +13,12 @@ const settingLanguage = "language"
 
 // loadLanguage reads the durable application default. It never consults the OS locale.
 func loadLanguage(pg *db.DB) error {
-	lang, _ := locale.FromEnv(os.Getenv)
+	lang, ok := locale.FromEnv(os.Getenv)
+	if !ok {
+		// No operator env override: fall back to the build's shipped default
+		// (zh-TW for this build) unless a stored setting says otherwise below.
+		lang = locale.ShippedDefault
+	}
 	raw, exists, err := pg.GetSetting(settingLanguage)
 	if err != nil {
 		return err

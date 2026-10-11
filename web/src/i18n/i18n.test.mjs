@@ -19,18 +19,18 @@ function browser(stored = null, cookie = "") {
 }
 function reset() { delete globalThis.window; delete globalThis.document; __resetLocaleForTests(); }
 
-test("English is the default; unsupported and malformed preferences safely fall back", () => {
-  reset(); assert.equal(getLocale(), "en");
+test("Traditional Chinese is the default; unsupported and malformed preferences safely fall back", () => {
+  reset(); assert.equal(getLocale(), "zh-TW");
   assert.equal(normalizeLocale("ko-KR"), "ko");
   assert.equal(normalizeLocale("zh-CN"), null);
   assert.equal(readCookieLocale("scopeweaver_locale=%E0%A4%A"), null);
   browser("unsupported", "scopeweaver_locale=ko"); initializeLocale(); assert.equal(getLocale(), "ko");
-  reset(); browser("unsupported", "scopeweaver_locale=%bad"); initializeLocale(); assert.equal(getLocale(), "en"); reset();
+  reset(); browser("unsupported", "scopeweaver_locale=%bad"); initializeLocale(); assert.equal(getLocale(), "zh-TW"); reset();
 });
 
-test("persisted Korean starts with the English hydration snapshot and initializes afterward", () => {
+test("persisted Korean starts with the Traditional Chinese hydration snapshot and initializes afterward", () => {
   reset(); browser("ko");
-  assert.equal(getLocale(), "en"); assert.equal(translate("common.save"), "Save");
+  assert.equal(getLocale(), "zh-TW"); assert.equal(translate("common.save"), "儲存");
   assert.equal(localeHeaders()["Accept-Language"], "ko", "first API call honors persisted preference before effects");
   let calls=0; const unsubscribe=subscribeLocale(()=>calls++); initializeLocale();
   assert.equal(getLocale(), "ko"); assert.equal(translate("common.save"), "저장"); assert.equal(calls,1);
@@ -73,7 +73,7 @@ test("locale transport preserves caller headers, queries, and fragments", async 
 });
 
 test("authored demo data changes language; edited and cloned user values do not", () => {
-  reset(); browser();
+  reset(); browser(); setLocale("en"); // pin an English baseline; the default locale is zh-TW.
   const fixture=cloneDemoFixture({title:"Dashboard",nested:[{name:"Save"}]},true);
   assert.equal(fixture.title,"Dashboard"); setLocale("ko"); assert.equal(fixture.title,"대시보드"); assert.equal(fixture.nested[0].name,"저장");
   Object.assign(fixture,{title:"My dashboard 原文"}); const runtimeCopy=cloneDemoFixture(fixture);

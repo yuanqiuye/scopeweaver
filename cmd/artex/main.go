@@ -44,7 +44,10 @@ func printBanner(addr string) {
 // whether to relaunch us (see selfupdate.ExitRestart) — so the body has to live
 // in a function that can *return* rather than os.Exit past its own defers.
 func main() {
-	lang, _ := locale.FromEnv(os.Getenv)
+	lang, ok := locale.FromEnv(os.Getenv)
+	if !ok {
+		lang = locale.ShippedDefault
+	}
 	locale.SetServerDefault(lang)
 	os.Exit(run())
 }

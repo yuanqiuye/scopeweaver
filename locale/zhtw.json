@@ -1670,7 +1670,6 @@
 "kind must be allow or deny": "kind 必須是 allow 或 deny",
 "kind must be command / script / http / shell": "kind 必須是 command / script / http / shell",
 "kind must be shell, command, script, or http": "kind 必須是 shell、command、script 或 http",
-"language must be en or ko": "language 必須是 en 或 ko",
 "list_assets unavailable: AssetStore is not initialized": "list_assets 無法使用：AssetStore 尚未初始化",
 "list_companies unavailable: CompanyStore is not initialized": "list_companies 無法使用：CompanyStore 尚未初始化",
 "list_projects_data failed: ": "list_projects_data 失敗： ",
@@ -1866,5 +1865,6 @@
 "advisory lock: %w": "諮詢鎖定失敗: %w",
 "HTTP/SSE URL": "HTTP/SSE URL",
 "%w: %v": "%w: %v",
-"db: ": "資料庫: "
+"db: ": "資料庫: ",
+"language must be en, ko, or zh-TW": "語言必須為 en、ko 或 zh-TW"
 }

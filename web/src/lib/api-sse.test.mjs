@@ -42,13 +42,13 @@ test("production SSE stays on the UI origin and preserves authentication and loc
 
 test("development SSE bypasses the buffering Next.js proxy", () => {
   __resetLocaleForTests();
-  assert.equal(client({ NODE_ENV: "development" }).sseUrl("/api/activity"), "https://scope.example:8787/api/activity?lang=en");
+  assert.equal(client({ NODE_ENV: "development" }).sseUrl("/api/activity"), "https://scope.example:8787/api/activity?lang=zh-TW");
 });
 
 test("explicit SSE overrides include an empty same-origin base", () => {
   __resetLocaleForTests();
-  for (const [base, expected] of [["", "/api/activity?lang=en"], ["https://events.example", "https://events.example/api/activity?lang=en"]]) {
+  for (const [base, expected] of [["", "/api/activity?lang=zh-TW"], ["https://events.example", "https://events.example/api/activity?lang=zh-TW"]]) {
     assert.equal(client({ NODE_ENV: "development", NEXT_PUBLIC_SSE_BASE: base }).sseUrl("/api/activity"), expected);
   }
-  assert.equal(client({ NODE_ENV: "production" }, null, false).sseUrl("/api/activity"), "/api/activity?lang=en");
+  assert.equal(client({ NODE_ENV: "production" }, null, false).sseUrl("/api/activity"), "/api/activity?lang=zh-TW");
 });

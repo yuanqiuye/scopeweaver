@@ -31,8 +31,20 @@ const (
 	ZhTW Lang = "zh-TW"
 )
 
-// Default is the fallback language when nothing else is negotiated.
+// Default is the last-resort fallback for an individual message when no
+// translation exists for the negotiated language; it stays English so a missing
+// translation always degrades to English rather than to a blank or key. The
+// product's out-of-the-box UI language is a separate, configurable concern: see
+// ShippedDefault and the server/CLI startup resolution.
 const Default = En
+
+// ShippedDefault is the interface language a freshly-installed build presents
+// when the operator has configured nothing (no SCOPEWEAVER_LANGUAGE/ARTEX_LANGUAGE
+// env var and no stored "language" setting). This build targets a Traditional
+// Chinese (Taiwan) audience, so it ships defaulting to zh-TW; English and Korean
+// remain fully supported and selectable per request, per task, or per operator
+// setting.
+const ShippedDefault = ZhTW
 
 // CookieName is the browser cookie the UI sets to persist the chosen locale.
 const CookieName = "scopeweaver_locale"
