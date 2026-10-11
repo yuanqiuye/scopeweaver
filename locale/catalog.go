@@ -26,6 +26,29 @@ func Register(key string, en, ko string) {
 	}
 }
 
+// RegisterZhTW adds (or overrides) the Traditional Chinese (Taiwan) entry for a
+// message key. It is separate from Register so the existing En/Ko call sites
+// stay untouched; ZhTW translations live in their own catalog files and are
+// filled in incrementally. A missing ZhTW entry falls back to En via Lookup.
+func RegisterZhTW(key, zhtw string) {
+	if zhtw == "" {
+		return
+	}
+	m := catalog[key]
+	if m == nil {
+		m = map[Lang]string{}
+		catalog[key] = m
+	}
+	m[ZhTW] = zhtw
+}
+
+// RegisterAllZhTW bulk-registers Traditional Chinese entries: entries[key] = zhtw.
+func RegisterAllZhTW(entries map[string]string) {
+	for key, zhtw := range entries {
+		RegisterZhTW(key, zhtw)
+	}
+}
+
 // RegisterAll bulk-registers entries: entries[key] = {En: ..., Ko: ...}.
 func RegisterAll(entries map[string]map[Lang]string) {
 	for key, langs := range entries {

@@ -25,6 +25,10 @@ const (
 	En Lang = "en"
 	// Ko is Korean, the selectable alternative.
 	Ko Lang = "ko"
+	// ZhTW is Traditional Chinese (Taiwan), the selectable alternative. Its
+	// catalog entries are optional per key — a missing ZhTW falls back to En —
+	// so translations can be filled in incrementally.
+	ZhTW Lang = "zh-TW"
 )
 
 // Default is the fallback language when nothing else is negotiated.
@@ -38,15 +42,33 @@ const CookieName = "scopeweaver_locale"
 const QueryParam = "lang"
 
 // Supported reports whether l is a language ScopeWeaver ships translations for.
-func Supported(l Lang) bool { return l == En || l == Ko }
+func Supported(l Lang) bool { return l == En || l == Ko || l == ZhTW }
 
-// Normalize parses a raw locale token (e.g. "en", "EN", "en-US", "ko_KR") into a
-// supported Lang. ok is false when the token does not map to a supported
-// language, so callers can fall through to the next negotiation source.
+// Normalize parses a raw locale token (e.g. "en", "EN", "en-US", "ko_KR",
+// "zh-TW", "zh-Hant") into a supported Lang. ok is false when the token does not
+// map to a supported language, so callers can fall through to the next
+// negotiation source.
+//
+// Chinese is handled by script/region rather than by the bare primary subtag:
+// Traditional variants (zh-TW, zh-Hant, zh-HK, zh-MO) map to ZhTW, while
+// Simplified or unmarked Chinese (zh-CN, zh-Hans, bare zh, …) is intentionally
+// not supported, so a Simplified preference never silently selects Traditional.
 func Normalize(s string) (Lang, bool) {
 	s = strings.TrimSpace(strings.ToLower(s))
 	if s == "" {
 		return Default, false
+	}
+	// Chinese variants: distinguish Traditional from Simplified/unmarked before
+	// the generic primary-subtag collapse below would drop the region/script.
+	if s == "zh" || strings.HasPrefix(s, "zh-") || strings.HasPrefix(s, "zh_") {
+		rest := strings.ReplaceAll(s, "_", "-")
+		switch {
+		case rest == "zh-tw" || rest == "zh-hk" || rest == "zh-mo" ||
+			rest == "zh-hant" || strings.HasPrefix(rest, "zh-hant-"):
+			return ZhTW, true
+		default:
+			return Default, false
+		}
 	}
 	// Keep only the primary subtag: "en-us" / "en_us" -> "en".
 	if i := strings.IndexAny(s, "-_;"); i >= 0 {
